@@ -1,21 +1,30 @@
+'use client'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import SignInBtn from './SignInBtn'
 
 export default function UserInfo() {
-  return (
-    <div className="shadow-xl p-8 rounded-md flex flex-col gap-3 bg-yellow-200">
+  const { status, data: session } = useSession()
+
+  if (status === 'authenticated') {
+    return (
+      <div className="shadow-xl p-8 rounded-md flex flex-col gap-3 bg-yellow-200">
         <Image
           className="rounded-full"
-          src={''}
+          src={session?.user?.image!}
           width={60}
           height={60}
-          alt='image'
+          alt='Avatar Image'
         />
         <div>
-          Name: <span className="font-bold">Name</span>
+          Name: <span className="font-bold">{session?.user?.name}</span>
         </div>
         <div>
-          Email: <span className="font-bold">Email</span>
+          Email: <span className="font-bold">{session?.user?.email}</span>
         </div>
       </div>
-  )
+    )
+  } else {
+    return <SignInBtn />
+  }
 }
